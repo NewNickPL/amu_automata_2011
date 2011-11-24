@@ -25,9 +25,13 @@ class AnyTransitionLabel extends TransitionLabel {
          return false;
     }
 
+    public String toString() {
+         return "ANY";
+    }
+
     @Override
     protected TransitionLabel intersectWith(TransitionLabel label) {
-          return label.isEmpty() ? new EmptyTransitionLabel() : this;
+        boolean isResultEmpty = (label.isEmpty() || label.canBeEpsilon());
+        return isResultEmpty ? new EmptyTransitionLabel() : this;
     }
 }
-
