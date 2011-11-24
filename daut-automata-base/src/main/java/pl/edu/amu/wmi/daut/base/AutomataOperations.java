@@ -268,4 +268,4 @@ public class AutomataOperations {
         automaton.addTransition(q0, q2, new EpsilonTransitionLabel());
         return automaton;
     }
-}
+};
