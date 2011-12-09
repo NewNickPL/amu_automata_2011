@@ -295,32 +295,6 @@ public class AutomataOperations {
         return automaton;
     }
 
-<<<<<<< HEAD
-    /**
-     * Metoda zwracająca automat akceptujący różnicę języków akceptowanych
-     * przez 2 automaty.
-     */
-    public static AutomatonSpecification differenceAutomaton(
-        AutomatonSpecification automatonA, AutomatonSpecification automatonB) {
-        AutomatonSpecification automatonC = new NaiveAutomatonSpecification();
-        State q0 = automatonC.addState();
-        State q1 = automatonC.addState();
-        State q2 = automatonC.addState();
-        State q3 = automatonC.addState();
-        automatonC.markAsInitial(q0);
-        automatonC.markAsFinal(q3);
-        automatonC.insert(q1, automatonA);
-        //automatonC.insert(q2, reverseLanguageAutomat(
-                //(NaiveAutomatonSpecification) automatonB));
-        //metoda reverseLanguageAutomat nie jest statyczna,
-        //a takze w parametrze przyjmuje NaiveAutomaton, a nie zwykły Automaton.
-        automatonC.addTransition(q0, q1, new EpsilonTransitionLabel());
-        automatonC.addTransition(q1, q2, new EpsilonTransitionLabel());
-        automatonC.addTransition(q2, q3, new EpsilonTransitionLabel());
-        return automatonC;
-    }
-};
-=======
   /**
   * Zwraca automat akceptujący język powstały w wyniku zastosowania homomorfizmu h na
   * języku akceptowanym przez automat automaton. Homomorfizm jest dany jako mapa, w której
@@ -640,4 +614,3 @@ public class AutomataOperations {
     }
 
 }
->>>>>>> a880ec3f03574e93e9fb433f669d3b9abc5d12ff
