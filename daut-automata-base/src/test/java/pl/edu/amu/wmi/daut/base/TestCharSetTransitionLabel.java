@@ -2,15 +2,14 @@ package pl.edu.amu.wmi.daut.base;
 
 import junit.framework.TestCase;
 import java.util.HashSet;
-import java.util.Set;
 
 /**
- * Klasa testujaca klasę CharRangeTransitionLabel.
+ * Klasa testujaca klasę CharSetTransitionLabel.
  */
 public class TestCharSetTransitionLabel extends TestCase {
 
     /**
-     * Metoda testująca CharRangeTransitionLabel.
+     * Metoda testująca CharSetTransitionLabel.
      * Puste przecięcie.
      */
     public final void testEmptyIntersection() {
@@ -24,12 +23,12 @@ public class TestCharSetTransitionLabel extends TestCase {
         aut.markAsInitial(s0);
         aut.markAsFinal(s2);
         
-        HashSet<Character> set = new HashSet();
+        HashSet<Character> set = new HashSet<Character>();
         set.add('a');
         set.add('b');
         set.add('c');
         
-        HashSet<Character> set2 = new HashSet();
+        HashSet<Character> set2 = new HashSet<Character>();
         set.add('d');
         set.add('e');
         set.add('f');
@@ -45,16 +44,15 @@ public class TestCharSetTransitionLabel extends TestCase {
         assertTrue(trans.canAcceptCharacter('b'));
         assertTrue(trans.canAcceptCharacter('c'));
         assertFalse(trans.canAcceptCharacter('h'));
+        
+        assertFalse(trans2.intersectWith(trans).canAcceptCharacter('a'));
 
         assertFalse(trans.canBeEpsilon());
 
-        assertSame(trans.intersectWith(trans2), trans2.intersectWith(trans));
-
-        assertSame(trans.intersectWith(trans2), new EmptyTransitionLabel());
     }
 
     /**
-     * Metoda testująca CharRangeTransitionLabel.
+     * Metoda testująca CharSetTransitionLabel.
      * Niepuste przecięcie.
      */
     public final void testNotEmptyIntersection() {
@@ -68,12 +66,12 @@ public class TestCharSetTransitionLabel extends TestCase {
         aut.markAsInitial(s0);
         aut.markAsFinal(s3);
         
-        HashSet<Character> set = new HashSet();
+        HashSet<Character> set = new HashSet<Character>();
         set.add('a');
         set.add('b');
         set.add('c');
         
-        HashSet<Character> set2 = new HashSet();
+        HashSet<Character> set2 = new HashSet<Character>();
         set.add('b');
         set.add('c');
         set.add('d');
@@ -99,7 +97,7 @@ public class TestCharSetTransitionLabel extends TestCase {
     }
 
     /**
-     * Metoda testująca CharRangeTransitionLabel.
+     * Metoda testująca CharSetTransitionLabel.
      * Przedziały zawierające się.
      */
     public final void testContainedIntersection() {
@@ -111,14 +109,14 @@ public class TestCharSetTransitionLabel extends TestCase {
         aut.markAsInitial(s0);
         aut.markAsFinal(s3);
         
-        HashSet<Character> set = new HashSet();
+        HashSet<Character> set = new HashSet<Character>();
         set.add('a');
         set.add('b');
         set.add('c');
         set.add('d');
         set.add('e');
         
-        HashSet<Character> set2 = new HashSet();
+        HashSet<Character> set2 = new HashSet<Character>();
         set.add('b');
         set.add('c');
         set.add('d');
@@ -143,7 +141,7 @@ public class TestCharSetTransitionLabel extends TestCase {
        
     }
     /**
-     * Metoda testująca CharRangeTransitionLabel.
+     * Metoda testująca CharSetTransitionLabel.
      * Przedziały równe.
      */
     public final void testEqualIntersection() {
@@ -155,7 +153,7 @@ public class TestCharSetTransitionLabel extends TestCase {
         aut.markAsInitial(s0);
         aut.markAsFinal(s3);
         
-        HashSet<Character> set = new HashSet();
+        HashSet<Character> set = new HashSet<Character>();
         set.add('a');
         set.add('b');
         set.add('c');
@@ -177,7 +175,7 @@ public class TestCharSetTransitionLabel extends TestCase {
     }
 
     /**
-     * Metoda testująca CharRangeTransitionLabel.
+     * Metoda testująca CharSetTransitionLabel.
      * Końce przedziałów równe.
      */
     public final void testEndsEqualIntersection() {
@@ -189,13 +187,13 @@ public class TestCharSetTransitionLabel extends TestCase {
         aut.markAsInitial(s0);
         aut.markAsFinal(s3);
         
-        HashSet<Character> set = new HashSet();
+        HashSet<Character> set = new HashSet<Character>();
         set.add('a');
         set.add('b');
         set.add('c');
         set.add('d');
         
-        HashSet<Character> set2 = new HashSet();
+        HashSet<Character> set2 = new HashSet<Character>();
         set.add('b');
         set.add('c');
         set.add('d');
@@ -216,7 +214,7 @@ public class TestCharSetTransitionLabel extends TestCase {
         assertTrue(trans2.intersectWith(trans).canAcceptCharacter('d'));
     }
     /**
-     * Metoda testująca CharRangeTransitionLabel.
+     * Metoda testująca CharSetTransitionLabel.
      * Przedziały zawierające się, jednoznakowe.
      */
     public final void testOneCharIntersection() {
@@ -228,7 +226,7 @@ public class TestCharSetTransitionLabel extends TestCase {
         aut.markAsInitial(s0);
         aut.markAsFinal(s3);
         
-        HashSet<Character> set = new HashSet();
+        HashSet<Character> set = new HashSet<Character>();
         set.add('a');
         
         TransitionLabel trans = new CharSetTransitionLabel(set);
