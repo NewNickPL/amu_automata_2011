@@ -635,4 +635,29 @@ public class AutomataOperations {
 
         return wsa;
     }
+     /**	  	
+     * Metoda zwracająca automat akceptujący różnicę języków akceptowanych
+     * przez 2 automaty.
+     */
+    public static AutomatonSpecification differenceAutomaton(
+            AutomatonSpecification automatonA, AutomatonSpecification automatonB,
+            Set<Character> alfabet) {
+        AutomatonSpecification automatonC = new NaiveAutomatonSpecification();
+        State q0 = automatonC.addState();
+        State q1 = automatonC.addState();
+        State q2 = automatonC.addState();
+        State q3 = automatonC.addState();
+        automatonC.markAsInitial(q0);
+        automatonC.markAsFinal(q3);
+        automatonC.insert(q1, automatonA);
+        DeterministicAutomatonSpecification detB = new NaiveDeterministicAutomatonSpecification();
+        Determinizer deter = new Determinizer();
+        deter.determinize(automatonB, detB);
+        automatonC.insert(q2, complementLanguageAutomaton(detB, alfabet));
+        automatonC.addTransition(q0, q1, new EpsilonTransitionLabel());
+        automatonC.addTransition(q1, q2, new EpsilonTransitionLabel());
+        automatonC.addTransition(q2, q3, new EpsilonTransitionLabel());
+        return automatonC;
+    }
 }
+
