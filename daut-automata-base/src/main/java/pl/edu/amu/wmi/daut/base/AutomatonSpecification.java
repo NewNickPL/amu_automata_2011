@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.Stack;
 
@@ -194,16 +195,12 @@ public abstract class AutomatonSpecification implements Cloneable  {
         else {
             int counter = 0;
             boolean isThereNoInitialState = false;
-            try {
-                for (State s : allStates()) {
-                    if (this.isFinal(s))
-                        counter++;
-                    this.getInitialState();
-                }
-            } catch (Exception e) {
-                isThereNoInitialState = true;
+            for (State s : allStates()) {
+                if (this.isFinal(s))
+                    counter++;
             }
-
+            if (this.getInitialState() == null)
+                isThereNoInitialState = true;
             if (counter == 0 || isThereNoInitialState)
                 return false;
             else {
@@ -571,6 +568,7 @@ public abstract class AutomatonSpecification implements Cloneable  {
     /**
      * Zwraca true, gdy automat akceptuje napis pusty.
      */
+
     public boolean acceptEmptyWord() {
 
         List<State> tocheck = new ArrayList<State>();
@@ -589,13 +587,13 @@ public abstract class AutomatonSpecification implements Cloneable  {
             transitions.clear();
             transitions = allOutgoingTransitions(tocheck.get(i));
 
-            for (int j = 0; j < transitions.size(); ++j) {
-                label = transitions.get(j).getTransitionLabel();
-                state = transitions.get(j).getTargetState();
+            for (OutgoingTransition j : transitions) {
+                label = j.getTransitionLabel();
+                state = j.getTargetState();
 
                 if (label.canBeEpsilon() && !tocheck.contains(state)) {
                     tocheck.add(state);
-                    iterator++;
+                    ++iterator;
 
                     if (isFinal(state)) {
                         return true;
@@ -605,6 +603,7 @@ public abstract class AutomatonSpecification implements Cloneable  {
         }
         return false;
     }
+
 
     /**
      * Sprawdza, czy w automacie istnieją zbędne stany.
@@ -789,18 +788,44 @@ public abstract class AutomatonSpecification implements Cloneable  {
         return words;
     }
 
+
     /**
      * Sprawdza, czy akceptowany język jest nieskończony.
      */
     public boolean isInfinite() {
-        return findFinals(getInitialState(), new ArrayList<State>());
+        return checkForLoop(getInitialState(), new ArrayList<State>());
+    }
+
+    private boolean checkForLoop(State state, List<State> history) {
+
+        for (State his : history) {
+            if (his == state) {
+                return findFinals(state, new ArrayList<State>());
+            }
+        }
+
+        if (allOutgoingTransitions(state).isEmpty())
+            return false;
+
+        history.add(state);
+
+        boolean result = false;
+        for (OutgoingTransition child : allOutgoingTransitions(state)) {
+            List<State> newHistory = new ArrayList<State>();
+            for (State s : history)
+                newHistory.add(s);
+                result = result || checkForLoop(child.getTargetState(), newHistory);
+            if (result)
+                break;
+        }
+        return result;
     }
 
     private boolean findFinals(State state, List<State> history) {
         boolean result = false;
 
         if (isFinal(state))
-            result = result || checkForLoop(state, new ArrayList<State>());
+            return true;
 
         if (allOutgoingTransitions(state).size() == 0)
             return false;
@@ -816,27 +841,6 @@ public abstract class AutomatonSpecification implements Cloneable  {
             for (State s : history)
                 newHistory.add(s);
             result = result || findFinals(child.getTargetState(), newHistory);
-            if (result)
-                break;
-        }
-        return result;
-    }
-
-    private boolean checkForLoop(State state, List<State> history) {
-        for (State his : history)
-            if (his == state)
-                return isFinal(state);
-
-        if (allOutgoingTransitions(state).size() == 0)
-            return false;
-
-        history.add(state);
-        boolean result = false;
-        for (OutgoingTransition child : allOutgoingTransitions(state)) {
-            List<State> newHistory = new ArrayList<State>();
-            for (State s : history)
-                newHistory.add(s);
-            result = result || checkForLoop(child.getTargetState(), newHistory);
             if (result)
                 break;
         }
@@ -938,10 +942,74 @@ public abstract class AutomatonSpecification implements Cloneable  {
      * Tworzy epsilon domknięcie zadanego stanu.
      */
     public Set<State> getEpsilonClosure(State initial) {
+        AlwaysAcceptingContextChecker contextChecker = new AlwaysAcceptingContextChecker();
+        return doGetEpsilonClosure(initial, contextChecker);
+    }
+    /**
+     * Odznacza końcowy stan.
+     */
+    public void unmarkedAsFinalState(State state) {
+        getFinalStates().remove(state);
+    }
+    /**
+     * Dla podanego automatu tworzy równoważny automat z 1 stanem końcowym.
+     */
+    public AutomatonSpecification makeOneFinalStateAutomaton() {
+        ArrayList<State> allFinalStates = new ArrayList<State>();
+        ArrayList<State> allStates = new ArrayList<State>();
 
+        allStates.addAll(allStates());
+
+        for (State someState : allStates) {
+            if (isFinal(someState)) {
+                allFinalStates.add(someState);
+            }
+        }
+
+        int size = allFinalStates.size();
+        AutomatonSpecification spec = new NaiveAutomatonSpecification();
+
+        switch (size) {
+            case 0:
+                spec.clone();
+                spec.markAsFinal(spec.addState());
+                return spec;
+            case 1:
+                spec.clone();
+                return spec;
+            default:
+                spec.clone();
+                State stateFinal = spec.addState();
+                for (State someState : allFinalStates) {
+                    spec.unmarkedAsFinalState(someState);
+                    spec.addTransition(someState, stateFinal, new EpsilonTransitionLabel());
+                    return spec;
+                }
+        }
+        return null;
+    }
+
+    protected List<State> getFinalStates() {
+        return finalStatess;
+    }
+
+    /**
+     * Zwraca epsilon domknięcie zadanego stanu, z uwzględnieniem warunków kontekstowych.
+     */
+    public Set<State> getEpsilonClosureWithContext(State initial, String s, int position) {
+        ReallyCheckingContextChecker contextChecker =
+                new ReallyCheckingContextChecker(s, position);
+        return doGetEpsilonClosure(initial, contextChecker);
+    }
+
+    /**
+     * Metoda wyszukująca epsilon domknięcie.
+     */
+    private Set<State> doGetEpsilonClosure(State initial, ContextChecker contextChecker) {
         Set<State> epsilonClosure = new HashSet<State>();
         Set<State> visited = new HashSet<State>();
         Stack<State> stack = new Stack<State>();
+
         stack.push(initial);
         epsilonClosure.add(initial);
 
@@ -951,19 +1019,21 @@ public abstract class AutomatonSpecification implements Cloneable  {
                 continue;
             }
             visited.add(from);
+
             for (OutgoingTransition trans : allOutgoingTransitions(from)) {
                 TransitionLabel label = trans.getTransitionLabel();
                 State to = trans.getTargetState();
-                if (label.canBeEpsilon()) {
+                if (label.canBeEpsilon() && contextChecker.check(label)) {
                     epsilonClosure.add(to);
                     stack.push(to);
                 }
             }
-        }
 
+        }
         return epsilonClosure;
     }
 
+    private LinkedList<State> finalStatess = new LinkedList<State>();
 };
 
 class StructureException extends Exception {
