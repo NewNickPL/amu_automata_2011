@@ -639,7 +639,7 @@ public class AutomataOperations {
      * Metoda zwracająca automat akceptujący różnicę języków akceptowanych
      * przez 2 automaty.
      */
-    public static AutomatonSpecification differenceAutomaton(
+    public static AutomatonSpecification differenceAutomatona(
             AutomatonSpecification automatonA, AutomatonSpecification automatonB,
             Set<Character> alfabet) {
         AutomatonSpecification automatonC = new NaiveAutomatonSpecification();
