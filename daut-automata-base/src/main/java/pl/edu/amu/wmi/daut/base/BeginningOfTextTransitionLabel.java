@@ -1,8 +1,8 @@
 package pl.edu.amu.wmi.daut.base;
 
 /**
- * Klasa odpowiedzialna za epsilon-przejscie, gdy automat 
- * znajduje się na początku napisu
+ * Klasa odpowiedzialna za epsilon-przejscie, gdy automat
+ * znajduje się na początku napisu.
  */
 public class BeginningOfTextTransitionLabel extends ZeroLengthConditionalTransitionLabel {
 
