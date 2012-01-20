@@ -22,17 +22,17 @@ public class TestCharSetTransitionLabel extends TestCase {
 
         aut.markAsInitial(s0);
         aut.markAsFinal(s2);
-        
+
         HashSet<Character> set = new HashSet<Character>();
         set.add('a');
         set.add('b');
         set.add('c');
-        
+
         HashSet<Character> set2 = new HashSet<Character>();
         set.add('d');
         set.add('e');
         set.add('f');
-        
+
         TransitionLabel trans = new CharSetTransitionLabel(set);
         TransitionLabel trans2 = new CharSetTransitionLabel(set2);
 
@@ -44,7 +44,7 @@ public class TestCharSetTransitionLabel extends TestCase {
         assertTrue(trans.canAcceptCharacter('b'));
         assertTrue(trans.canAcceptCharacter('c'));
         assertFalse(trans.canAcceptCharacter('h'));
-        
+
         assertFalse(trans2.intersectWith(trans).canAcceptCharacter('a'));
 
         assertFalse(trans.canBeEpsilon());
@@ -65,17 +65,17 @@ public class TestCharSetTransitionLabel extends TestCase {
 
         aut.markAsInitial(s0);
         aut.markAsFinal(s3);
-        
+
         HashSet<Character> set = new HashSet<Character>();
         set.add('a');
         set.add('b');
         set.add('c');
-        
+
         HashSet<Character> set2 = new HashSet<Character>();
         set.add('b');
         set.add('c');
         set.add('d');
-        
+
         TransitionLabel trans = new CharSetTransitionLabel(set);
         TransitionLabel trans2 = new CharSetTransitionLabel(set2);
         aut.addTransition(s0, s1, trans);
@@ -108,19 +108,19 @@ public class TestCharSetTransitionLabel extends TestCase {
         State s3 = aut.addState();
         aut.markAsInitial(s0);
         aut.markAsFinal(s3);
-        
+
         HashSet<Character> set = new HashSet<Character>();
         set.add('a');
         set.add('b');
         set.add('c');
         set.add('d');
         set.add('e');
-        
+
         HashSet<Character> set2 = new HashSet<Character>();
         set.add('b');
         set.add('c');
         set.add('d');
-        
+
         TransitionLabel trans = new CharSetTransitionLabel(set);
         TransitionLabel trans2 = new CharSetTransitionLabel(set2);
         aut.addTransition(s0, s1, trans);
@@ -138,7 +138,7 @@ public class TestCharSetTransitionLabel extends TestCase {
         assertTrue(trans2.intersectWith(trans).canAcceptCharacter('c'));
         assertTrue(trans2.intersectWith(trans).canAcceptCharacter('d'));
         assertFalse(trans2.intersectWith(trans).canAcceptCharacter('e'));
-       
+
     }
     /**
      * Metoda testująca CharSetTransitionLabel.
@@ -152,12 +152,12 @@ public class TestCharSetTransitionLabel extends TestCase {
         State s3 = aut.addState();
         aut.markAsInitial(s0);
         aut.markAsFinal(s3);
-        
+
         HashSet<Character> set = new HashSet<Character>();
         set.add('a');
         set.add('b');
         set.add('c');
-        
+
         TransitionLabel trans = new CharSetTransitionLabel(set);
         TransitionLabel trans2 = new CharSetTransitionLabel(set);
         aut.addTransition(s0, s1, trans);
@@ -186,18 +186,18 @@ public class TestCharSetTransitionLabel extends TestCase {
         State s3 = aut.addState();
         aut.markAsInitial(s0);
         aut.markAsFinal(s3);
-        
+
         HashSet<Character> set = new HashSet<Character>();
         set.add('a');
         set.add('b');
         set.add('c');
         set.add('d');
-        
+
         HashSet<Character> set2 = new HashSet<Character>();
         set.add('b');
         set.add('c');
         set.add('d');
-        
+
         TransitionLabel trans = new CharSetTransitionLabel(set);
         TransitionLabel trans2 = new CharSetTransitionLabel(set2);
         aut.addTransition(s0, s1, trans);
@@ -225,10 +225,10 @@ public class TestCharSetTransitionLabel extends TestCase {
         State s3 = aut.addState();
         aut.markAsInitial(s0);
         aut.markAsFinal(s3);
-        
+
         HashSet<Character> set = new HashSet<Character>();
         set.add('a');
-        
+
         TransitionLabel trans = new CharSetTransitionLabel(set);
         TransitionLabel trans2 = new CharSetTransitionLabel(set);
         aut.addTransition(s0, s1, trans);

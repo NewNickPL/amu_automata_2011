@@ -635,7 +635,7 @@ public class AutomataOperations {
 
         return wsa;
     }
-     /**	  	
+     /**
      * Metoda zwracająca automat akceptujący różnicę języków akceptowanych
      * przez 2 automaty.
      */
