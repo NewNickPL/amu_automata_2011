@@ -10,9 +10,7 @@ public class BeginningOfTextTransitionLabel extends ZeroLengthConditionalTransit
     protected boolean doCheckContext(String s, int position) {
         if ((position < 0) || (position > s.length())) {
             throw new PositionOutOfStringBordersException();
-        } else if (position == 0) {
-            return true;
-        } else return false;
+        } else return (position == 0);
     }
 
     @Override
